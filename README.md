@@ -2,6 +2,8 @@
 
 A small, interactive demonstration of a physics-inspired landing-gear condition-monitoring workflow. The project generates synthetic oleo-strut signals, extracts signal and dynamics features, trains a Random Forest classifier across 11 simulated conditions, and visualizes a simulated event in Streamlit.
 
+**Live demo:** [phi-twin-lite.onrender.com](https://phi-twin-lite.onrender.com)
+
 > **Safety and validation notice:** This is an educational software demo built entirely on synthetic signals. It is not validated or certified for aircraft operation, airworthiness, diagnosis, or maintenance decisions. The dashboard's model confidence is not a calibrated probability, the normal-class probability is not a validated health index, and the project does not estimate remaining useful life. The reported test accuracy measures separation within this synthetic simulator only.
 
 ## Features
@@ -10,7 +12,7 @@ A small, interactive demonstration of a physics-inspired landing-gear condition-
 - Feature extraction for displacement, pressure, damping, frequency, kurtosis, peaks, and a settling proxy.
 - Reproducible train/test split and Random Forest evaluation.
 - Interactive Streamlit dashboard with scenario injection, signal charts, feature values, and class probabilities.
-- Render Blueprint configuration for deployment from GitHub, with automatic deploys and an HTTP health check.
+- Render Blueprint configuration for repeatable deployment from GitHub, with automatic deploys and an HTTP health check.
 
 ## Project layout
 
@@ -42,14 +44,13 @@ streamlit run app.py
 
 The training step creates `landing_gear_data.csv` if it does not exist, prints test-set metrics, and writes `model.pkl`. To regenerate the synthetic dataset, remove `landing_gear_data.csv` and rerun `python train.py`, or run `python generate_data.py` directly.
 
-## Deploy from GitHub to Render
+## Render deployment
 
-1. Push this repository to GitHub.
-2. In Render, choose **New > Blueprint**, connect the GitHub repository, and select its `render.yaml` file (the repository root is the default).
-3. Review the Blueprint plan and create the `phi-twin-lite` web service. Render builds from `requirements.txt`, starts Streamlit on Render's assigned `$PORT`, and checks `/_stcore/health`.
-4. The service deploys from the selected Git branch. With `autoDeploy` enabled, later commits to that branch trigger deployments automatically.
+The public service at [phi-twin-lite.onrender.com](https://phi-twin-lite.onrender.com) is already connected to this repository's `main` branch. New commits to `main` are deployed automatically. No additional setup is needed to use the live demo.
 
-The checked-in Blueprint selects Render's free plan and Frankfurt region. Free Render web services can spin down after 15 minutes without inbound traffic, so the public URL persists but the first visit after idle time may take time to wake. Choose a paid always-on instance in Render if continuous warm availability is required; pricing and billing are controlled in the Render account.
+To create a separate deployment from this repository, choose **New > Blueprint** in Render, connect the GitHub repository, and select the root `render.yaml`. Review the proposed resources before applying the Blueprint. The manifest builds from `requirements.txt`, starts Streamlit on Render's assigned `$PORT`, checks `/_stcore/health`, and deploys from the selected branch when it changes.
+
+The Blueprint selects Render's free plan and Frankfurt region. Free Render web services can spin down after 15 minutes without inbound traffic, so the public URL persists but the first visit after idle time may take time to wake. Choose a paid always-on instance in Render if continuous warm availability is required; pricing and billing are controlled in the Render account.
 
 ## Fault classes
 
